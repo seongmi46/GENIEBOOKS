@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <typeAliases>
+  	<!-- <typeAlias alias="board" type="com.spring.biz.board.BoardVO"/> -->
+  	<typeAlias type="com.bit.bookstore.vo.GoodsVO" alias="goodsvo"/>
+  	<typeAlias type="com.bit.bookstore.vo.BookVO" alias="bookvo"/>
+  	<typeAlias type="com.bit.bookstore.vo.CartBookVO" alias="cartbookvo"/>
+  	<typeAlias type="com.bit.bookstore.vo.OrdersVO" alias="ordersvo"/>
+  	<typeAlias type="com.bit.bookstore.vo.CartVO" alias="cartvo"/>
+  	<typeAlias type="com.bit.bookstore.vo.StoreVO" alias="storevo"/>
+  	<typeAlias alias="officeVO" type="com.spring.biz.office.OfficeVO" />
+  	<typeAlias alias="officeBookVO" type="com.spring.biz.office.BookVO" />
+  </typeAliases>
+  
+  <mappers>
+    <!-- <mapper resource="mappings/board-mapper.xml"/> -->
+    <mapper resource="mappings/order-mapper.xml"/>
+    <mapper resource="mappings/user-mapper.xml"/>
+    <mapper resource="mappings/office-mapper.xml"/>
+    <mapper resource="mappings/officeBook-mapper.xml"/>
+  </mappers>
+</configuration>

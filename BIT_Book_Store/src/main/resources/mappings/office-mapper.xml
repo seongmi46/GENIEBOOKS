@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="officeDAO">
+  
+	<select id="getOfficeSales" resultType="int">
+		SELECT SUM(C.TOTPRICE)
+		  FROM ORDERS O, ORDER_DETAIL D, (SELECT (B.BOOK_SALEPRICE * D.ORDER_B_CNT) AS TOTPRICE, D.ORDER_NO AS O_NO
+		                                      FROM ORDERS O, ORDER_DETAIL D, BOOK B
+		                                     WHERE O.ORDER_NO = D.ORDER_NO
+		                                       AND D.ORDER_B_NO = B.BOOK_NO
+		                                       AND D.ORDER_OFFICE_NO = 'store2'
+		                                       AND O.ORDER_DATE = '2020/09/09') C
+		 WHERE O.ORDER_NO = D.ORDER_NO
+		   AND D.ORDER_NO = C.O_NO
+		 GROUP BY D.ORDER_OFFICE_NO, O.ORDER_DATE;
+	</select>
+	
+	
+	<!-- 주문 리스트 가져오기 -->
+	<select id="getOrderList" parameterType="String" resultType="officeVO">
+		SELECT O.ORDER_NO,  D.ORDER_B_NO, o.order_user_id, o.order_recv_name, o.order_recv_phone, o.order_date,
+        B.BOOK_NAME, b.book_saleprice, d.order_b_cnt
+	  		FROM ORDERS O, ORDER_BOOK D, BOOK B
+			WHERE o.order_no = d.order_no
+			AND d.book_no = b.book_no
+			AND d.order_office_no = 'store2'
+	</select>
+	
+	<!-- 책 보유 리스트 조회 -->
+	<select id="officeBookList" parameterType="String" resultType="officeVO">
+		SELECT b.book_no, b.category_no, b.book_name, b.book_writer, b.book_publisher,
+		       b.book_price, b.book_saleprice, NVL(b.book_info, '데이터없음') AS book_info, NVL(b.book_published_date, '9999/12/31') AS book_published_date, NVL(b.book_total_page, 0) as book_total_page,
+		       NVL(b.book_entered_date, '9999/12/31') as book_entered_date, NVL(b.ebook, 0) as ebook, NVL(b.book_isbn, 0) as book_isbn, b.book_img, bs.cnt
+		  FROM BOOK B, STORE S, BOOK_STOCK BS
+		 WHERE b.book_no = bs.book_no
+		   AND s.store_code = bs.store_code
+		   AND s.store_code = 'store2'
+	</select>
+	
+	
+	<!-- 오늘 판매 금액 (현재는 2020-09-09) -->
+	<select id="todaySalesValue" parameterType="String" resultType="int">
+		SELECT SUM(B.BOOK_SALEPRICE * D.ORDER_B_CNT) sumSales
+		  FROM ORDERS O, ORDER_BOOK D, BOOK B
+		 WHERE O.ORDER_NO = D.ORDER_NO
+		   AND D.BOOK_NO = B.BOOK_NO
+		   AND d.order_office_no = 'store2'		<!-- #{office_no} -->
+		   AND O.ORDER_DATE = '2020/09/09'		<!-- #{today} -->
+		 GROUP BY d.order_office_no
+	</select>
+	
+	<!-- 해당 월 판매 금액 (현재는 9월) -->
+	<select id="monthSalesValue" parameterType="String" resultType="int">
+		SELECT SUM(B.BOOK_SALEPRICE * D.ORDER_B_CNT) sumSales
+		  FROM ORDERS O, ORDER_BOOK D, BOOK B
+		 WHERE O.ORDER_NO = D.ORDER_NO
+		   AND D.BOOK_NO = B.BOOK_NO
+		   AND d.order_office_no = 'store2'
+		   AND O.ORDER_DATE BETWEEN TO_DATE('2020-09-01', 'YYYY-MM-DD')
+		                        AND TO_DATE('2020-09-30', 'YYYY-MM-DD')
+		 GROUP BY d.order_office_no
+	</select>
+	
+	<!-- 한달동안의 매출 표시 -->
+	<select id="monthTOTCost" parameterType="String" resultType="officeVO">
+		SELECT o.order_date, sum(o.order_total_cost) AS TOTCOST
+		  FROM ORDERS O, ORDER_BOOK D, BOOK B
+		 WHERE O.ORDER_NO = D.ORDER_NO
+		   AND D.BOOK_NO = B.BOOK_NO
+		   AND d.order_office_no = 'store2'
+		   AND O.ORDER_DATE BETWEEN add_months(SYSDATE,-1) AND SYSDATE
+		 GROUP BY O.ORDER_DATE
+	</select>
+	
+</mapper>
