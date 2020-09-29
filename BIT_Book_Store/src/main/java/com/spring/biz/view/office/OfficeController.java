@@ -39,7 +39,7 @@ public class OfficeController {
 		System.out.println(">> 관리페이지 이동");
 		
 		HashMap<String, Integer> sales = new HashMap<String, Integer>();
-		
+		office_no = "store2";
 		int daySales = officeService.todaySalesValue(office_no);
 		int monthSales = officeService.monthSalesValue(office_no);
 		
