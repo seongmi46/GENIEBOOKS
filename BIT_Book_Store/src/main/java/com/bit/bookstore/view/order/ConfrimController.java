@@ -60,6 +60,7 @@ public class ConfrimController {
 		return rand + "";
 	}
 	
+	
 	@RequestMapping("/sendEmail.do")
 	public String sendEmail(String email) throws AddressException, MessagingException {
 		//6자리 인증코드 생성

@@ -6,11 +6,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.biz.office.BookService;
+import com.spring.biz.office.BookOfficeService;
 import com.spring.biz.office.BookVO;
 
-@Service("bookService")
-public class BookServiceImpl implements BookService{
+@Service("bookOfficeService")
+public class BookServiceImpl implements BookOfficeService{
 	@Autowired //타입이 일치하는 객체(인스턴스) 주입
 	private BookDAOMybatis bookDAO;
 	

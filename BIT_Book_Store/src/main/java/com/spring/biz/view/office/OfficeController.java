@@ -3,21 +3,18 @@ package com.spring.biz.view.office;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.spring.biz.office.BookService;
+import com.spring.biz.office.BookOfficeService;
 import com.spring.biz.office.BookVO;
 import com.spring.biz.office.OfficeService;
 import com.spring.biz.office.OfficeVO;
@@ -30,7 +27,7 @@ public class OfficeController {
 	@Autowired
 	private OfficeService officeService;
 	@Autowired
-	private BookService bookService;
+	private BookOfficeService bookOfficeService;
 	
 	
 	public OfficeController() {
@@ -77,12 +74,12 @@ public class OfficeController {
 		
 		System.out.println(book_no);
 		
-		List<BookVO> categoryCode = bookService.getCategoryCode();
+		List<BookVO> categoryCode = bookOfficeService.getCategoryCode();
 		System.out.println(categoryCode);
 		model.addAttribute("categoryCode", categoryCode);
 		
 		
-		BookVO bookInfo = bookService.getBookInfo(book_no);
+		BookVO bookInfo = bookOfficeService.getBookInfo(book_no);
 		model.addAttribute("bookInfo", bookInfo);
 		
 		return "/seongmi/bookModify.jsp";
@@ -116,12 +113,12 @@ public class OfficeController {
 		vo.setCategory_name(category_name);
 		
 		try {
-			int category_no = bookService.getCategoryNo(vo);
+			int category_no = bookOfficeService.getCategoryNo(vo);
 			//System.out.println(category_no);
 			vo.setCategory_no(category_no);
 			//System.out.println(vo);
 			
-			int result = bookService.modifyUpdate(vo);
+			int result = bookOfficeService.modifyUpdate(vo);
 			entity = new ResponseEntity<Integer>(result, HttpStatus.OK);
 		
 		} catch (Exception e) {
@@ -147,7 +144,7 @@ public class OfficeController {
 	public String officeNewBook(Model model) {
 		System.out.println(">> 상품입고페이지 이동");
 		
-		List<BookVO> categoryCode = bookService.getCategoryCode();
+		List<BookVO> categoryCode = bookOfficeService.getCategoryCode();
 		System.out.println(categoryCode);
 		model.addAttribute("categoryCode", categoryCode);
 		
@@ -161,7 +158,7 @@ public class OfficeController {
 		ResponseEntity<List<BookVO>> entity = null;
 		System.out.println("category_code: " + category_code);
 		try {
-			List<BookVO> list = bookService.getCategoryMain(category_code);
+			List<BookVO> list = bookOfficeService.getCategoryMain(category_code);
 			System.out.println(list);
 			entity = new ResponseEntity<List<BookVO>>(list, HttpStatus.OK);
 			
@@ -187,7 +184,7 @@ public class OfficeController {
 		category.put("category_main", category_main);
 		
 		try {
-			List<BookVO> list = bookService.getCategoryName(category);
+			List<BookVO> list = bookOfficeService.getCategoryName(category);
 			System.out.println(list);
 			entity = new ResponseEntity<List<BookVO>>(list, HttpStatus.OK);
 			
@@ -210,7 +207,7 @@ public class OfficeController {
 		map.put("book_name", book_name);
 		map.put("category_name", category_name);
 		try {
-			List<BookVO> list = bookService.searchBookName(map);
+			List<BookVO> list = bookOfficeService.searchBookName(map);
 			System.out.println(list);
 			entity = new ResponseEntity<List<BookVO>>(list, HttpStatus.OK);
 		} catch (Exception e) {

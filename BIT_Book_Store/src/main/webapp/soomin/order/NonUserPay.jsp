@@ -871,7 +871,7 @@
 										<tr>
 											<td>
 												<input type="hidden" name="cart_idxs" value="${cartbookvo.cart_idx }">
-												<img class="book-img" alt="책 이미지${cartbookvo.book_no }" src="${pageContext.request.contextPath}/resources/images/book_img/${cartbookvo.book_img }">
+												<img class="book-img" alt="책 이미지${cartbookvo.book_no }" src="${cartbookvo.book_img }">
 												${cartbookvo.book_name }
 											</td>
 											<td class="center middle">
@@ -898,7 +898,7 @@
 										<c:forEach var="bookvo" items="${requestScope.orderBookList }" varStatus="status">
 										<tr>
 											<td>
-												<img class="book-img" alt="책 이미지${bookvo.book_no }" src="${pageContext.request.contextPath}/resources/images/book_img/${bookvo.book_img }">
+												<img class="book-img" alt="책 이미지${bookvo.book_no }" src="${bookvo.book_img }">
 												${bookvo.book_name }
 											</td>
 											<td class="center middle">

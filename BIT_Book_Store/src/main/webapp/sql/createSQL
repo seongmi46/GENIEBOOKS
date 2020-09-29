@@ -113,13 +113,12 @@ CREATE TABLE USERS
     birthday_year      NUMBER           NULL, 
     birthday_month     NUMBER           NULL, 
     birthday_day       NUMBER           NULL, 
-    zip_code           NUMBER           NOT NULL, 
+    zip_code           NUMBER           NULL, 
     street_addr        VARCHAR2(100)    NULL, 
-    lot_addr           VARCHAR2(100)    NOT NULL, 
-    remaining_addr     NVARCHAR2(50)    NOT NULL, 
+    remaining_addr     NVARCHAR2(50)    NULL, 
     email              VARCHAR2(40)     NOT NULL, 
     email_receive      NUMBER           NULL, 
-    mileage            NUMBER           NULL, 
+    point              NUMBER           NULL, 
     rate_idx           NUMBER           NULL, 
     purchase_cnt       NUMBER           NULL, 
     purchase_6month    NUMBER           NULL, 
@@ -168,9 +167,6 @@ COMMENT ON COLUMN USERS.zip_code IS '우편번호'
 COMMENT ON COLUMN USERS.street_addr IS '도로명주소'
 /
 
-COMMENT ON COLUMN USERS.lot_addr IS '지번주소'
-/
-
 COMMENT ON COLUMN USERS.remaining_addr IS '나머지주소'
 /
 
@@ -180,7 +176,7 @@ COMMENT ON COLUMN USERS.email IS '이메일'
 COMMENT ON COLUMN USERS.email_receive IS '이메일수신여부'
 /
 
-COMMENT ON COLUMN USERS.mileage IS '마일리지'
+COMMENT ON COLUMN USERS.point IS '포인트'
 /
 
 COMMENT ON COLUMN USERS.rate_idx IS '등급인덱스'
@@ -208,7 +204,7 @@ ALTER TABLE USERS
 CREATE TABLE BOOK
 (
     book_no                NUMBER            NOT NULL, 
-    CATERORY_NO            NUMBER            NULL, 
+    CATEGORY_NO            NUMBER            NULL, 
     book_name              VARCHAR2(50)      NOT NULL, 
     book_writer            VARCHAR2(50)      NOT NULL, 
     book_publisher         VARCHAR2(50)      NOT NULL, 
@@ -220,6 +216,7 @@ CREATE TABLE BOOK
     book_entered_date      DATE              NULL, 
     ebook                  NUMBER            NULL, 
     book_isbn              NUMBER            NULL, 
+    book_img               VARCHAR2(100)     NULL, 
     CONSTRAINT BOOK_PK PRIMARY KEY (book_no)
 )
 /
@@ -251,7 +248,7 @@ COMMENT ON TABLE BOOK IS '책테이블'
 COMMENT ON COLUMN BOOK.book_no IS '책 상품번호'
 /
 
-COMMENT ON COLUMN BOOK.CATERORY_NO IS '책분류'
+COMMENT ON COLUMN BOOK.CATEGORY_NO IS '책분류'
 /
 
 COMMENT ON COLUMN BOOK.book_name IS '책제목'
@@ -287,8 +284,11 @@ COMMENT ON COLUMN BOOK.ebook IS 'ebook여부'
 COMMENT ON COLUMN BOOK.book_isbn IS 'isbn번호'
 /
 
+COMMENT ON COLUMN BOOK.book_img IS '책 대표 이미지 경로'
+/
+
 ALTER TABLE BOOK
-    ADD CONSTRAINT FK_BOOK_CATERORY_NO_BOOK_CATEG FOREIGN KEY (CATERORY_NO)
+    ADD CONSTRAINT FK_BOOK_CATEGORY_NO_BOOK_CATEG FOREIGN KEY (CATEGORY_NO)
         REFERENCES BOOK_CATEGORY (CATEGORY_NO)
 /
 
@@ -298,9 +298,8 @@ CREATE TABLE STORE
 (
     store_code            VARCHAR2(30)     NOT NULL, 
     store_pwd             VARCHAR2(20)     NOT NULL, 
-    lot_addr              VARCHAR2(100)    NOT NULL, 
     zip_code              NUMBER           NOT NULL, 
-    street_addr           VARCHAR2(100)    NULL, 
+    street_addr           VARCHAR2(100)    NOT NULL, 
     remaining_addr        VARCHAR2(50)     NOT NULL, 
     email                 VARCHAR2(40)     NOT NULL, 
     store_phone_number    VARCHAR2(30)     NOT NULL, 
@@ -316,9 +315,6 @@ COMMENT ON COLUMN STORE.store_code IS '지점번호'
 /
 
 COMMENT ON COLUMN STORE.store_pwd IS '지점비밀번호'
-/
-
-COMMENT ON COLUMN STORE.lot_addr IS '지번주소'
 /
 
 COMMENT ON COLUMN STORE.zip_code IS '우편번호'
@@ -351,11 +347,10 @@ CREATE TABLE ORDERS
     ORDER_TOTAL_COST             NUMBER           NOT NULL, 
     ORDER_MESSAGE                VARCHAR2(100)    NULL, 
     ORDER_RECV_STREET_ADDR       VARCHAR2(100)    NULL, 
-    ORDER_RECV_LOT_ADDR          VARCHAR2(100)    NOT NULL, 
-    ORDER_RECV_REMAINING_ADDR    VARCHAR2(50)     NOT NULL, 
-    ORDER_RECV_ZIP_CODE          NUMBER           NOT NULL, 
+    ORDER_RECV_REMAINING_ADDR    VARCHAR2(50)     NULL, 
+    ORDER_RECV_ZIP_CODE          NUMBER           NULL, 
     state                        VARCHAR2(20)     NULL, 
-    ORDER_ACCU_MILEAGE           NUMBER           NULL, 
+    ORDER_ACCU_POINT             NUMBER           NULL, 
     ORDER_NONMEM_EMAIL           VARCHAR2(40)     NULL, 
     CONSTRAINT ORDERS_PK PRIMARY KEY (ORDER_NO)
 )
@@ -409,9 +404,6 @@ COMMENT ON COLUMN ORDERS.ORDER_MESSAGE IS '요청사항'
 COMMENT ON COLUMN ORDERS.ORDER_RECV_STREET_ADDR IS '받는사람 도로명주소'
 /
 
-COMMENT ON COLUMN ORDERS.ORDER_RECV_LOT_ADDR IS '받는사람 지번주소'
-/
-
 COMMENT ON COLUMN ORDERS.ORDER_RECV_REMAINING_ADDR IS '받는 사람 나머지 주소'
 /
 
@@ -421,7 +413,7 @@ COMMENT ON COLUMN ORDERS.ORDER_RECV_ZIP_CODE IS '받는사람 우편번호'
 COMMENT ON COLUMN ORDERS.state IS '배송상태'
 /
 
-COMMENT ON COLUMN ORDERS.ORDER_ACCU_MILEAGE IS '적립마일리지'
+COMMENT ON COLUMN ORDERS.ORDER_ACCU_POINT IS '적립포인트'
 /
 
 COMMENT ON COLUMN ORDERS.ORDER_NONMEM_EMAIL IS '비회원 이메일'
@@ -714,7 +706,7 @@ CREATE TABLE EVENT
 (
     event_idx           NUMBER            NOT NULL, 
     event_type          VARCHAR2(20)      NOT NULL, 
-    event_title         VARCHAR2(20)      NOT NULL, 
+    event_title         VARCHAR2(100)     NOT NULL, 
     event_start         DATE              NOT NULL, 
     event_end           DATE              NOT NULL, 
     event_content       VARCHAR2(1000)    NOT NULL, 
@@ -920,7 +912,7 @@ CREATE TABLE BOOK_STOCK
 (
     stock_idx     NUMBER          NOT NULL, 
     store_code    VARCHAR2(30)    NOT NULL, 
-    book_code     NUMBER          NOT NULL, 
+    book_no       NUMBER          NOT NULL, 
     cnt           NUMBER          NOT NULL, 
     CONSTRAINT BOOK_STOCK_PK PRIMARY KEY (stock_idx)
 )
@@ -956,7 +948,7 @@ COMMENT ON COLUMN BOOK_STOCK.stock_idx IS '재고인덱스'
 COMMENT ON COLUMN BOOK_STOCK.store_code IS '지점번호'
 /
 
-COMMENT ON COLUMN BOOK_STOCK.book_code IS '책 상품번호'
+COMMENT ON COLUMN BOOK_STOCK.book_no IS '책 상품번호'
 /
 
 COMMENT ON COLUMN BOOK_STOCK.cnt IS '개수'
@@ -968,7 +960,7 @@ ALTER TABLE BOOK_STOCK
 /
 
 ALTER TABLE BOOK_STOCK
-    ADD CONSTRAINT FK_BOOK_STOCK_book_code_BOOK_b FOREIGN KEY (book_code)
+    ADD CONSTRAINT FK_BOOK_STOCK_book_no_BOOK_boo FOREIGN KEY (book_no)
         REFERENCES BOOK (book_no)
 /
 

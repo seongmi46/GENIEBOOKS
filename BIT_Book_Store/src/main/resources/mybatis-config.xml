@@ -13,6 +13,14 @@
   	<typeAlias type="com.bit.bookstore.vo.StoreVO" alias="storevo"/>
   	<typeAlias alias="officeVO" type="com.spring.biz.office.OfficeVO" />
   	<typeAlias alias="officeBookVO" type="com.spring.biz.office.BookVO" />
+  	
+  	<typeAlias alias="book" type="com.spring.biz.book.BookVO"/>
+  	<typeAlias alias="cart" type="com.spring.biz.cart.CartVO"/>
+  	<typeAlias alias="store" type="com.spring.biz.store.StoreVO"/>
+  	<typeAlias alias="stock" type="com.spring.biz.bookstock.BookStockVO"/>
+  	<typeAlias alias="jego" type="com.spring.biz.jego.JegoVO"/>
+  	<typeAlias alias="event" type="com.spring.biz.event.EventVO"/>
+  	
   </typeAliases>
   
   <mappers>
@@ -21,5 +29,11 @@
     <mapper resource="mappings/user-mapper.xml"/>
     <mapper resource="mappings/office-mapper.xml"/>
     <mapper resource="mappings/officeBook-mapper.xml"/>
+    <mapper resource="mappings/book-mapper.xml"/>
+    <mapper resource="mappings/cart-mapper.xml"/>
+   <mapper resource="mappings/store-mapper.xml"/>
+   <mapper resource="mappings/stock-mapper.xml"/>
+   <mapper resource="mappings/jego-mapper.xml"/>
+   <mapper resource="mappings/event-mapper.xml"/>
   </mappers>
 </configuration>
