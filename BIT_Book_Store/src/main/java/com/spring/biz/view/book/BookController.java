@@ -76,7 +76,7 @@ public class BookController {
 		System.out.println("bookstockvo : " + bookstockvo);
 		System.out.println("jego : " + jego);
 		System.out.println("eventlist : " + eventlist);
-		return "/view/bookDetail.jsp";
+		return "/seonghyeon/bookDetail.jsp";
 	}
 
 	
