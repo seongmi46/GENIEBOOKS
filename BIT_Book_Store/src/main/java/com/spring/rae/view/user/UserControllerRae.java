@@ -12,11 +12,11 @@ import com.spring.rae.user.UserService;
 import com.spring.rae.user.UserVO;
 
 @Controller
-public class UserController {
+public class UserControllerRae {
 	@Autowired
-	private UserService userService;
+	private UserService userraeService;
 	
-	public UserController() {
+	public UserControllerRae() {
 		System.out.println("--->> UserController() 객체생성");
 	}
 	
@@ -30,7 +30,7 @@ public class UserController {
 			throw new IllegalArgumentException("아이디는 반드시 입력해야 합니다");
 		}		
 		
-		UserVO user = userService.getUser(vo);
+		UserVO user = userraeService.getUser(vo);
 		if (user != null) {
 			return "getBoardList.do";
 		} else {

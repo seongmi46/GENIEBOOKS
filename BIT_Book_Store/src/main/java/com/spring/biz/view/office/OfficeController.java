@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.spring.biz.office.OfficeBookService;
-import com.spring.biz.office.OfficeBookVO;
+import com.spring.biz.office.BookOfficeService;
+import com.spring.biz.office.BookVO;
 import com.spring.biz.office.OfficeService;
 import com.spring.biz.office.OfficeVO;
 
@@ -27,7 +27,7 @@ public class OfficeController {
 	@Autowired
 	private OfficeService officeService;
 	@Autowired
-	private OfficeBookService bookOfficeService;
+	private BookOfficeService bookOfficeService;
 	
 	
 	public OfficeController() {
@@ -74,12 +74,12 @@ public class OfficeController {
 		
 		System.out.println(book_no);
 		
-		List<OfficeBookVO> categoryCode = bookOfficeService.getCategoryCode();
+		List<BookVO> categoryCode = bookOfficeService.getCategoryCode();
 		System.out.println(categoryCode);
 		model.addAttribute("categoryCode", categoryCode);
 		
 		
-		OfficeBookVO bookInfo = bookOfficeService.getBookInfo(book_no);
+		BookVO bookInfo = bookOfficeService.getBookInfo(book_no);
 		model.addAttribute("bookInfo", bookInfo);
 		
 		return "/seongmi/bookModify.jsp";
@@ -94,7 +94,7 @@ public class OfficeController {
 		ResponseEntity<Integer> entity = null;
 		
 		System.out.println("도서업데이트 실행");
-		OfficeBookVO vo = new OfficeBookVO();
+		BookVO vo = new BookVO();
 		vo.setBook_no(book_no);
 		vo.setBook_name(book_name);
 		vo.setBook_writer(book_writer);
@@ -144,7 +144,7 @@ public class OfficeController {
 	public String officeNewBook(Model model) {
 		System.out.println(">> 상품입고페이지 이동");
 		
-		List<OfficeBookVO> categoryCode = bookOfficeService.getCategoryCode();
+		List<BookVO> categoryCode = bookOfficeService.getCategoryCode();
 		System.out.println(categoryCode);
 		model.addAttribute("categoryCode", categoryCode);
 		
@@ -153,18 +153,18 @@ public class OfficeController {
 	
 	@RequestMapping("/getCategoryMain.do")
 	@ResponseBody
-	public ResponseEntity<List<OfficeBookVO>> getCategoryMain(String category_code) throws Exception {
+	public ResponseEntity<List<BookVO>> getCategoryMain(String category_code) throws Exception {
 		System.out.println(">> getCategoryMain 실행");
-		ResponseEntity<List<OfficeBookVO>> entity = null;
+		ResponseEntity<List<BookVO>> entity = null;
 		System.out.println("category_code: " + category_code);
 		try {
-			List<OfficeBookVO> list = bookOfficeService.getCategoryMain(category_code);
+			List<BookVO> list = bookOfficeService.getCategoryMain(category_code);
 			System.out.println(list);
-			entity = new ResponseEntity<List<OfficeBookVO>>(list, HttpStatus.OK);
+			entity = new ResponseEntity<List<BookVO>>(list, HttpStatus.OK);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<List<OfficeBookVO>>(HttpStatus.BAD_REQUEST);	
+			entity = new ResponseEntity<List<BookVO>>(HttpStatus.BAD_REQUEST);	
 		}
 		
 		return entity;
@@ -173,9 +173,9 @@ public class OfficeController {
 	//카테고리 이름 가져오기
 	@RequestMapping("/getCategoryName.do")
 	@ResponseBody
-	public ResponseEntity<List<OfficeBookVO>> getCategoryName(String category_code, String category_main) throws Exception {
+	public ResponseEntity<List<BookVO>> getCategoryName(String category_code, String category_main) throws Exception {
 		System.out.println(">> getCategoryMain 실행");
-		ResponseEntity<List<OfficeBookVO>> entity = null;
+		ResponseEntity<List<BookVO>> entity = null;
 		System.out.println("category_code: " + category_code);
 		System.out.println("category_main: " + category_main);
 		
@@ -184,13 +184,13 @@ public class OfficeController {
 		category.put("category_main", category_main);
 		
 		try {
-			List<OfficeBookVO> list = bookOfficeService.getCategoryName(category);
+			List<BookVO> list = bookOfficeService.getCategoryName(category);
 			System.out.println(list);
-			entity = new ResponseEntity<List<OfficeBookVO>>(list, HttpStatus.OK);
+			entity = new ResponseEntity<List<BookVO>>(list, HttpStatus.OK);
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<List<OfficeBookVO>>(HttpStatus.BAD_REQUEST);	
+			entity = new ResponseEntity<List<BookVO>>(HttpStatus.BAD_REQUEST);	
 		}
 		
 		return entity;
@@ -198,21 +198,21 @@ public class OfficeController {
 	
 	@RequestMapping("/searchBookName.do")
 	@ResponseBody
-	public ResponseEntity<List<OfficeBookVO>> getBookName(String book_name, String category_name) throws Exception {
+	public ResponseEntity<List<BookVO>> getBookName(String book_name, String category_name) throws Exception {
 		System.out.println(">> getBookName 실행");
 		System.out.println(book_name + "    " + category_name);
-		ResponseEntity<List<OfficeBookVO>> entity = null;
+		ResponseEntity<List<BookVO>> entity = null;
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("book_name", book_name);
 		map.put("category_name", category_name);
 		try {
-			List<OfficeBookVO> list = bookOfficeService.searchBookName(map);
+			List<BookVO> list = bookOfficeService.searchBookName(map);
 			System.out.println(list);
-			entity = new ResponseEntity<List<OfficeBookVO>>(list, HttpStatus.OK);
+			entity = new ResponseEntity<List<BookVO>>(list, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			entity = new ResponseEntity<List<OfficeBookVO>>(HttpStatus.BAD_REQUEST);	
+			entity = new ResponseEntity<List<BookVO>>(HttpStatus.BAD_REQUEST);	
 		}
 		
 		return entity;

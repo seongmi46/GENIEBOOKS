@@ -517,7 +517,7 @@ $(document).ready(function(){
 							<span id="pointx"><a href="#" class="close">X</a></span>
 							</div>
 						<br>
-						<img src="/biz/resources/images/pic/btnimg1.png" alt="통합포인트"
+						<img src="${pageContext.request.contextPath}/resources/images/pic/btnimg1.png" alt="통합포인트"
 							style="width:600px">
 						</div>
 					</div>
@@ -538,7 +538,7 @@ $(document).ready(function(){
 								<span id="pointx"><a href="#" class="close">X</a></span>
 								</div>
 							<br>
-								<img src="/biz/resources/images/pic/btnimg2.png" alt="회원혜택"
+								<img src="${pageContext.request.contextPath}/resources/images/pic/btnimg2.png" alt="회원혜택"
 									style="width:600px">
 						</div>
 					</div>
