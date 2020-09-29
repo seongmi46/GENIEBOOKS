@@ -11,7 +11,7 @@ import com.spring.rae.book.BookVO;
 
 // @Service : @Component 상속확장 어노테이션
 //     비즈니스 로직처리 서비스 영역에 사용
-@Service("bookService")
+@Service("bookraeService")
 public class BookServiceImpl implements BookService {
 	@Autowired //타입이 일치하는 객체(인스턴스) 주입
 	//private BookDAO bookDAO;

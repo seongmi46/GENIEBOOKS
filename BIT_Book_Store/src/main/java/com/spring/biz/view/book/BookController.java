@@ -105,7 +105,7 @@ public class BookController {
 		System.out.println("jego2 : " + jego2);
 		model.addAttribute("jego2", jego2);
 //		model.addAttribute("bookvo", bookvo);
-		return "/view/ghmoonjego.jsp";
+		return "/seonghyeon/ghmoonjego.jsp";
 		
 		
 	}

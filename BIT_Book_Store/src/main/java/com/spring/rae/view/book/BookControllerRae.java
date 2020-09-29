@@ -24,11 +24,11 @@ import com.spring.rae.book.impl.BookServiceImpl;
 
 @Controller
 @SessionAttributes("book") //book 라는 이름의 Model이 있으면 session에 저장
-public class BookController {
+public class BookControllerRae {
 	@Autowired
-	private BookService bookService;
+	private BookService bookraeService;
 	
-	public BookController() {
+	public BookControllerRae() {
 		System.out.println("--->> BookController() 객체생성");
 	}
 	
@@ -53,7 +53,7 @@ public class BookController {
 		System.out.println(">>> 게시글 전체 목록 - String bestKorList()");
 		
 		//List<BookVO> bookList = bookDAO.getBookList();
-		List<BookVO> bestKorList = bookService.bestKorList(vo);
+		List<BookVO> bestKorList = bookraeService.bestKorList(vo);
 		model.addAttribute("bestKorList", bestKorList);
 		
 		return "bestMonth.jsp";
@@ -64,7 +64,7 @@ public class BookController {
 	public String getBoard(BookVO vo, Model model) {
 		System.out.println(">>> 글 상세 - String getBoard()");
 		
-		BookVO book = bookService.getBook(vo);
+		BookVO book = bookraeService.getBook(vo);
 		model.addAttribute("book", book);
 		System.out.println("getBook() book : " + book);
 		
@@ -76,7 +76,7 @@ public class BookController {
 		System.out.println(">>> 책 전체 목록 - String getBookList()");
 		
 		//List<BookVO> bookList = bookDAO.getBookList();
-		List<BookVO> bookList = bookService.getBookList(vo);
+		List<BookVO> bookList = bookraeService.getBookList(vo);
 		model.addAttribute("bookList", bookList);
 		
 		return "bestMonth.jsp";
