@@ -2,7 +2,7 @@ package com.spring.biz.office;
 
 import java.sql.Date;
 
-public class BookVO {
+public class OfficeBookVO {
 	//북테이블
 	private int book_no;
 	private int category_no;
@@ -26,12 +26,12 @@ public class BookVO {
 	private String category_name;
 	
 	
-	public BookVO() {
+	public OfficeBookVO() {
 		super();
 	}
 
 
-	public BookVO(int book_no, int category_no, String book_name, String book_writer, String book_publisher,
+	public OfficeBookVO(int book_no, int category_no, String book_name, String book_writer, String book_publisher,
 			int book_price, int book_saleprice, String book_info, Date book_published_date, int book_total_page,
 			Date book_entered_date, int ebook, int book_isbn, String book_img, String category_code,
 			String category_main, String category_middle, String category_name) {
@@ -57,7 +57,7 @@ public class BookVO {
 	}
 
 
-	public BookVO(String category_code, String category_main, String category_middle, String category_name) {
+	public OfficeBookVO(String category_code, String category_main, String category_middle, String category_name) {
 		super();
 		this.category_code = category_code;
 		this.category_main = category_main;
@@ -67,7 +67,7 @@ public class BookVO {
 
 
 
-	public BookVO(int book_no, int category_no, String book_name, String book_writer, String book_publisher,
+	public OfficeBookVO(int book_no, int category_no, String book_name, String book_writer, String book_publisher,
 			int book_price, int book_saleprice, String book_info, Date book_published_date, int book_total_page,
 			Date book_entered_date, int ebook, int book_isbn, String book_img) {
 		super();

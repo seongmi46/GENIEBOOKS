@@ -12,7 +12,7 @@
   	<typeAlias type="com.bit.bookstore.vo.CartVO" alias="cartvo"/>
   	<typeAlias type="com.bit.bookstore.vo.StoreVO" alias="storevo"/>
   	<typeAlias alias="officeVO" type="com.spring.biz.office.OfficeVO" />
-  	<typeAlias alias="officeBookVO" type="com.spring.biz.office.BookVO" />
+  	<typeAlias alias="officeBookVO" type="com.spring.biz.office.OfficeBookVO" />
   	
   	<typeAlias alias="book" type="com.spring.biz.book.BookVO"/>
   	<typeAlias alias="cart" type="com.spring.biz.cart.CartVO"/>
