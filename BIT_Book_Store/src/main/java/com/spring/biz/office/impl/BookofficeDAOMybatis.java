@@ -9,13 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.biz.office.BookVO;
 
-@Repository("BookDAOMybatis")
-public class BookDAOMybatis {
+@Repository("BookofficeDAOMybatis")
+public class BookofficeDAOMybatis {
 
 	@Autowired
 	public SqlSessionTemplate mybatis;
 	
-	public BookDAOMybatis() {
+	public BookofficeDAOMybatis() {
 		System.out.println(">> BookDAOMybatis 객체 생성");
 	}
 	

@@ -12,7 +12,7 @@ import com.spring.biz.office.BookVO;
 @Service("bookOfficeService")
 public class BookServiceImpl implements BookOfficeService{
 	@Autowired //타입이 일치하는 객체(인스턴스) 주입
-	private BookDAOMybatis bookDAO;
+	private BookofficeDAOMybatis bookDAO;
 	
 	
 	@Override
