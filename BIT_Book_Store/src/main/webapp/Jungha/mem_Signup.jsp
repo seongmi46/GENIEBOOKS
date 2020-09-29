@@ -377,21 +377,21 @@
 							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 							<td>
 								<label><input type="checkbox" id="terms1" value="terms1" class="terms">이용약관</label>
-								<a href="#" class="link" onclick="window.open('/biz/Jungha/detail/Terms_of_Use.jsp', 'blank', 'width=700, height=400, top=200, left=100, toolbar=no, menubar=no, scrollbars=yes, resizable=yes')">약관 전체보기</a>		
+								<a href="#" class="link" onclick="window.open('/bookstore/Jungha/detail/Terms_of_Use.jsp', 'blank', 'width=700, height=400, top=200, left=100, toolbar=no, menubar=no, scrollbars=yes, resizable=yes')">약관 전체보기</a>		
 							</td>
 						</tr>
 						<tr>
 							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 							<td>
 								<label><input type="checkbox" id="terms2" value="terms2" class="terms">커뮤니티 이용약관</label>
-								<a href="#" class="link" onclick="window.open('/biz/Jungha/detail/Terms_of_CommunityUse.jsp', 'blank', 'width=700, height=400, top=200, left=100, toolbar=no, menubar=no, scrollbars=yes, resizable=yes')">약관 전체보기</a>				
+								<a href="#" class="link" onclick="window.open('/bookstore/Jungha/detail/Terms_of_CommunityUse.jsp', 'blank', 'width=700, height=400, top=200, left=100, toolbar=no, menubar=no, scrollbars=yes, resizable=yes')">약관 전체보기</a>				
 							</td>
 						</tr>
 						<tr>
 							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 							<td>
 								<label><input type="checkbox" id="terms3" value="terms3" class="terms">개인 정보 수집 및 이용</label>		
-								<a href="#" class="link" onclick="window.open('/biz/Jungha/detail/Use_of_personal_information.jsp', 'blank', 'width=700, height=400, top=200, left=100, toolbar=no, menubar=no, scrollbars=yes, resizable=yes')">내용보기</a>		
+								<a href="#" class="link" onclick="window.open('/bookstore/Jungha/detail/Use_of_personal_information.jsp', 'blank', 'width=700, height=400, top=200, left=100, toolbar=no, menubar=no, scrollbars=yes, resizable=yes')">내용보기</a>		
 							</td>
 						</tr>
 					</table>

@@ -21,6 +21,7 @@
   	<typeAlias alias="jego" type="com.spring.biz.jego.JegoVO"/>
   	<typeAlias alias="event" type="com.spring.biz.event.EventVO"/>
   	
+  	<typeAlias alias="raebook" type="com.spring.rae.book.BookVO"/>
   </typeAliases>
   
   <mappers>
@@ -35,5 +36,6 @@
    <mapper resource="mappings/stock-mapper.xml"/>
    <mapper resource="mappings/jego-mapper.xml"/>
    <mapper resource="mappings/event-mapper.xml"/>
+   <mapper resource="mappings/rae-book-mapper.xml"/>
   </mappers>
 </configuration>
