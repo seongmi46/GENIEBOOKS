@@ -12,6 +12,7 @@
 	<context:component-scan base-package="com.spring.biz.view" />
 	<context:component-scan base-package="com.spring.biz.office" />
 	<context:component-scan base-package="com.spring.biz" />
+	<context:component-scan base-package="com.spring.rae" />
 	
 	
 	
