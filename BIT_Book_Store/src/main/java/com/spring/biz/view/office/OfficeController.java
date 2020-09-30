@@ -36,7 +36,7 @@ public class OfficeController {
 	
 	@RequestMapping("/officeAdmin.do")
 	public String officeAdmin(String office_no, Model model) {
-		System.out.println(">> 관리페이지 이동");
+		System.out.println(">> 관리페이지 이동1111");
 		
 		HashMap<String, Integer> sales = new HashMap<String, Integer>();
 		office_no = "store2";
