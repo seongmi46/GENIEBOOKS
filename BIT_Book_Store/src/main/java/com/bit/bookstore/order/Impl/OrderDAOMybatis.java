@@ -78,7 +78,7 @@ public class OrderDAOMybatis {
 		mybatis.update("Order.updateBasic_addr", map);
 	}
 	
-	//@Transactional
+	@Transactional
 	public void insertOrderdeleteCart(OrdersVO ordervo, int[] cart_idx, int[] orderbook_no, int[] ordergoods_no, String store_code) {
 		// TODO Auto-generated method stub
 		System.out.println("insertOrderdeleteCart");
@@ -103,6 +103,8 @@ public class OrderDAOMybatis {
 		map.put("order_office_no", store_code);
 		map.put("cartList", cartList);//cartList통해서 책 상품번호와 판매수량을 넣어줌
 		
+		mybatis.update("Order.updateBookStock2", map);
+		
 		if(store_code.equals("online")) {//온라인배송 
 			map.put("order_delivery_type", 0); 
 			map.put("state", "배송준비중"); 
@@ -126,7 +128,8 @@ public class OrderDAOMybatis {
 		map.put("cart_idxs", cart_idx);
 		mybatis.delete("Order.deleteCart", map);
 	}
-
+	
+	@Transactional
 	public void insertOrderDirect(OrdersVO ordervo, int[] orderbook_no, int orderbook_cnt, int[] ordergoods_no, String store_code) {
 		// TODO Auto-generated method stub
 		//ORDERS 테이블에 추가
@@ -136,7 +139,6 @@ public class OrderDAOMybatis {
 		}else {//바로드림일 때
 			mybatis.insert("Order.insertOrderNotOnline", ordervo);
 		}
-		
 		String id = ordervo.getOrder_user_id();
 		int order_no = mybatis.selectOne("Order.selectOrdersById", id);
 		
@@ -150,6 +152,8 @@ public class OrderDAOMybatis {
 		map.put("orderbook_no", orderbook_no);//배열이지만 배열 아님...(개수 하나 but 확인용으로 for문 돌려줄 것)
 		map.put("orderbook_cnt", orderbook_cnt);
 		
+		mybatis.update("Order.updateBookStock1", map);
+		
 		if(store_code.equals("online")) {//온라인배송 
 			map.put("order_delivery_type", 0); 
 			map.put("state", "배송준비중"); 
@@ -158,7 +162,7 @@ public class OrderDAOMybatis {
 			map.put("state", "결제완료"); 
 		}
 		System.out.println("Order_book테이블추가");
-		//mybatis.insert("Order.insertOrder_book2", map);
+		mybatis.insert("Order.insertOrder_book2", map);
 		
 		//ORDER_GOODS 테이블에 추가
 		map.clear();
@@ -166,6 +170,8 @@ public class OrderDAOMybatis {
 		map.put("ordergoods_no", ordergoods_no);
 		System.out.println("Order_goods테이블추가");
 		mybatis.insert("Order.insertOrder_goods", map);
+		
+		
 				
 	}
 	
@@ -192,8 +198,51 @@ public class OrderDAOMybatis {
 	}
 
 	
-	
-	
+	@Transactional
+	public void insertOrderNonNumber(OrdersVO ordervo, List<CartVO> orderbook, int[] ordergoods_no, String store_code) {
+		// TODO Auto-generated method stub
+		System.out.println("Orders테이블추가");
+		if(store_code.equals("online")) {//온라인배송일 때
+			mybatis.insert("Order.insertOrder", ordervo);
+		}else {//바로드림일 때
+			mybatis.insert("Order.insertOrderNotOnline", ordervo);
+		}
+		
+		
+		String id = ordervo.getOrder_user_id();
+		int order_no = mybatis.selectOne("Order.selectOrdersById", id);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		//ORDER_BOOK 테이블에 추가
+		map.clear();
+		
+		map.put("order_no", order_no); 
+		map.put("order_office_no", store_code);
+		map.put("cartList", orderbook);//book_no, book_cnt저장되어있는 CartVO형 리스트
+		System.out.println("????");
+		mybatis.update("Order.updateBookStock2", map);
+		
+		if(store_code.equals("online")) {//온라인배송 
+			map.put("order_delivery_type", 0); 
+			map.put("state", "배송준비중"); 
+		}else {//지점 바로드림
+			map.put("order_delivery_type", 2); 
+			map.put("state", "결제완료"); 
+		}
+		System.out.println("Order_book테이블추가");
+		mybatis.insert("Order.insertOrder_book", map);
+		
+		//ORDER_GOODS 테이블에 추가
+		map.clear();
+		map.put("order_no", order_no); 
+		map.put("ordergoods_no", ordergoods_no);
+		System.out.println("Order_goods테이블추가");
+		mybatis.insert("Order.insertOrder_goods", map);
+		
+		
+	}
+
 	
 	
 	

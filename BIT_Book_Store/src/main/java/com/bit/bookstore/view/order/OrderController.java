@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -60,13 +61,13 @@ public class OrderController {
 			@RequestParam(required = false) int[] ordercart_idx,
 			@RequestParam(required = false) int[] NonMemberBook_no,
 			@RequestParam(required = false, defaultValue = "0") int orderbook_cnt,
-			@RequestParam String store_code,
+			@RequestParam(required = false) String store_code,//지점 정보 처음에 보내줘야 됨
 			ModelAndView mav/* , HttpServletResponse response */) throws IOException {
 		//********로그인 되어있으면 세션에 있는 user의 마일리지를 가져옴, 비회원 구매이면 마일리지 가져오는 거 없음
 		//********장바구니에서 상품 선택 안 되어 있으면 그 창에서 script로 처리
 		String returnViewName;
 		
-		mav.addObject("store_code", store_code);
+		
 		
 		
 		//굿즈 리스트 가져오기(현재 시간에 파는 굿즈만)
@@ -78,6 +79,7 @@ public class OrderController {
 		mav.addObject("goodsList", goodsList);
 		System.out.println("goodsList : " + goodsList);
 		System.out.println("orderbook_cnt : " + orderbook_cnt);
+		System.out.println("store_code : " + store_code);
 		System.out.println("orderbook_no : " + Arrays.toString(orderbook_no));
 		
 		//orderbook_no가 있으면 바로구매
@@ -95,7 +97,7 @@ public class OrderController {
 				
 				//선택한 책들의 정보를 BookVO로 저장
 				orderBookList = orderService.getOrderCartList(ordercart_idx);
-				
+				store_code = orderBookList.get(0).getStore_code();
 				System.out.println("장바구니에서구매!");
 				
 			
@@ -105,6 +107,7 @@ public class OrderController {
 				@SuppressWarnings("unchecked")
 				List<CartVO> nonMemberCart = (List<CartVO>)session.getAttribute("nonMemberCart");
 				List<CartVO> nonMemberCartOrder = new ArrayList<CartVO>();
+				
 				
 				System.out.println(Arrays.toString(NonMemberBook_no));
 				for(int i = 0; i < NonMemberBook_no.length; i++) {
@@ -121,6 +124,7 @@ public class OrderController {
 			
 			System.out.println("orderBookList : " + orderBookList);
 			mav.addObject("orderBookList", orderBookList);
+			
 			
 			orderbook_no = new int[orderBookList.size()];
 			
@@ -167,7 +171,7 @@ public class OrderController {
 		}
 		
 		
-		
+		mav.addObject("store_code", store_code);
 		mav.addObject("orderbook_no", orderbook_no);
 		mav.addObject("point", point);
 		mav.addObject("totalPoint", totalPoint);
@@ -186,7 +190,7 @@ public class OrderController {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println("<script>");
-		out.println("잘못된 접근입니다.");
+		out.println("alert('잘못된 접근입니다.');");
 		out.println("location.href='index.jsp';");
 		out.println("</script>");
 		out.flush();
@@ -256,15 +260,7 @@ public class OrderController {
 				
 				UserVO user = (UserVO)session.getAttribute("user");
 				
-				StringTokenizer stringTokenizer = new StringTokenizer(user.getPhone_number1(), "-");
-				List<String> phoneNumberList = new ArrayList<String>();
 				
-				while(stringTokenizer.hasMoreTokens()) {
-					phoneNumberList.add(stringTokenizer.nextToken());
-				}
-				
-				System.out.println("phoneNumberList : " + phoneNumberList);
-				mav.addObject("phoneNumberList", phoneNumberList);
 				
 				
 				List<CartBookVO> orderCartList = orderService.getOrderCartList(ordercart_idx);
@@ -309,6 +305,21 @@ public class OrderController {
 		}
 		
 		
+		if(session.getAttribute("user") != null){
+			UserVO user = (UserVO)session.getAttribute("user");
+			StringTokenizer stringTokenizer = new StringTokenizer(user.getPhone_number1(), "-");
+			List<String> phoneNumberList = new ArrayList<String>();
+			
+			while(stringTokenizer.hasMoreTokens()) {
+				phoneNumberList.add(stringTokenizer.nextToken());
+			}
+			
+			System.out.println("phoneNumberList : " + phoneNumberList);
+			mav.addObject("phoneNumberList", phoneNumberList);
+		}
+		
+		
+		
 		if(!store_code.equals("online")) {//바로드림일 때 지점 정보 저장해서 넘겨주기
 			StoreVO storevo = orderService.getStoreInfo(store_code);
 			mav.addObject("storevo", storevo);
@@ -347,10 +358,10 @@ public class OrderController {
 			@RequestParam(required = false) int[] ordergoods_no,
 			@RequestParam String store_code,
 			@RequestParam int mypoint,
-			@RequestParam(required = false) String basic_addr,
-			@RequestParam(required = false) int[] cart_idx,//회원일 때 기본 배송지로 저장하기면 1, 아니면 빈 문자열 넘어옴
+			@RequestParam(required = false) String basic_addr,//회원일 때 기본 배송지로 저장하기면 1, 아니면 빈 문자열 넘어옴
+			@RequestParam(required = false) int[] cart_idx,
 			@RequestParam(required = false) String order_nonmem_email,
-			HttpSession session) {
+			HttpSession session, HttpServletResponse response) throws IOException {
 			
 			System.out.println("**결제 완료 시 나타나는 창");
 			System.out.println("ordervo : " + ordervo);
@@ -360,6 +371,7 @@ public class OrderController {
 			System.out.println("store_code : " + store_code);
 			System.out.println("mypoint : " + mypoint);
 			System.out.println("basic_addr : " + basic_addr);
+			System.out.println("cart_idx : " + Arrays.toString(cart_idx));
 			
 			String order_user_id;
 			
@@ -379,7 +391,16 @@ public class OrderController {
 				
 				
 				
-				
+				if(orderbook_cnt == 0) {//장바구니에서 구매일 시
+					
+					
+					orderService.insertOrderdeleteCart(ordervo, cart_idx, orderbook_no, ordergoods_no, store_code);
+					System.out.println("최종 - 회원 장바구니 구매 완료");
+					
+				}else {//바로구매일 시
+					orderService.insertOrderDirect(ordervo, orderbook_no, orderbook_cnt, ordergoods_no, store_code);
+					System.out.println("최종 - 바로구매 완료");
+				}
 				
 				
 				
@@ -394,20 +415,53 @@ public class OrderController {
 				
 				
 				
+				System.out.println("ordervo회원 아이디 입력 후 : " + ordervo);
+				if(orderbook_cnt == 0) {//장바구니에서 구매일 시
+					List<CartVO> nonMemberCart = (List<CartVO>)session.getAttribute("nonMemberCart");
+					System.out.println("nonMemberCart : " + nonMemberCart);
+					if(nonMemberCart == null) {
+						response.setContentType("text/html; charset=UTF-8");
+						PrintWriter out = response.getWriter();
+						out.println("<script>");
+						out.println("alert('세션이 만료되어 해당 책이 장바구니에 없습니다.\n다시 구매를 시작하여주십시오.');");
+						out.println("location.href='index.jsp';");
+						out.println("</script>");
+						out.flush();
+					}
+					List<CartVO> orderbook = new ArrayList<CartVO>();
+					
+					
+					for(int i = 0; i < orderbook_no.length; i++) {
+						for(int k = 0; k < nonMemberCart.size(); k++) {
+							if(orderbook_no[i] == nonMemberCart.get(k).getBook_no()) {
+								CartVO vo = new CartVO();
+								vo.setBook_no(orderbook_no[i]);
+								System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+								System.out.println(nonMemberCart.get(k).toString());
+								vo.setCnt(nonMemberCart.get(k).getCnt());
+								orderbook.add(vo);
+								System.out.println("비회원 장바구니 주문한 책 리스트 : " + orderbook);
+							}
+						}
+					}
+					
+					
+					orderService.insertOrderNonNumber(ordervo, orderbook, ordergoods_no, store_code);
+					System.out.println("최종 - 장바구니 구매 완료");
+					
+					
+				}else {//바로구매일 시
+					
+					orderService.insertOrderDirect(ordervo, orderbook_no, orderbook_cnt, ordergoods_no, store_code);
+					System.out.println("최종 - 바로구매 완료");
+					
+				}
+				
+				
+				
+				
 			}
-			System.out.println("ordervo회원 아이디 입력 후 : " + ordervo);
-			if(orderbook_cnt == 0) {//장바구니에서 구매일 시
-				
-				//orderService.insertOrderNonNumber(ordervo, orderbook_no, ordergoods_no, store_code);
-				System.out.println("최종 - 장바구니 구매 완료");
-				
-				
-			}else {//바로구매일 시
-				
-				orderService.insertOrderDirect(ordervo, orderbook_no, orderbook_cnt, ordergoods_no, store_code);
-				System.out.println("최종 - 바로구매 완료");
-				
-			}
+			
 			
 			
 			

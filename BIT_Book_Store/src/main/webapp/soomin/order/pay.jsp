@@ -34,7 +34,7 @@ $(function(){//imp72120243 -> smilepay결제(naver아이디)
 		pay_method : 'card',
 		merchant_uid : 'merchant_' + new Date().getTime(),
 		name : '지니문고',
-		amount : "${param.totalPayment}",
+		amount : "${param.totalPaymentReal}",
 		buyer_email : '${sessionScope.user.email }',
 		buyer_name : '${sessionScope.user.user_name }',
 		buyer_tel : "${sessionScope.user.phone_number1}",
@@ -134,42 +134,42 @@ $(function(){//imp72120243 -> smilepay결제(naver아이디)
 <body>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 <form id="payForm">
-	<input type="text" name="order_recv_name" value="${param.order_recv_name }">
-	<input type="text" name="order_recv_phone" value="${param.inputphone1 }-${param.inputphone2 }-${param.inputphone3 }">
-	<input type="text" name="order_total_cost" value="${param.totalPayment }">
+	<input type="hidden" name="order_recv_name" value="${param.order_recv_name }">
+	<input type="hidden" name="order_recv_phone" value="${param.inputphone1 }-${param.inputphone2 }-${param.inputphone3 }">
+	<input type="hidden" name="order_total_cost" value="${param.totalPayment }">
 	<c:if test="${param.store_code eq 'online'}">
-	<input type="text" name="order_message" value="${param.order_message }">
-	<input type="text" name="order_recv_zip_code" value="${param.order_recv_zip_code}">
-	<input type="text" name="order_recv_street_addr" value="${param.order_recv_street_addr}">
-	<input type="text" name="order_recv_remaining_addr" value="${param.order_recv_remaining_addr}">
+	<input type="hidden" name="order_message" value="${param.order_message }">
+	<input type="hidden" name="order_recv_zip_code" value="${param.order_recv_zip_code}">
+	<input type="hidden" name="order_recv_street_addr" value="${param.order_recv_street_addr}">
+	<input type="hidden" name="order_recv_remaining_addr" value="${param.order_recv_remaining_addr}">
 	</c:if>
-	<input type="text" name="order_accu_point" value="${param.point }">
-	<input type="text" name="basic_addr" value="${param.basic_addr }"><!-- 체크되어 있으면 value는 1 안 되어있으면 value는 빈 값이므로 "" -->
-	orderbook_no
+	<input type="hidden" name="order_accu_point" value="${param.point }">
+	<input type="hidden" name="basic_addr" value="${param.basic_addr }"><!-- 체크되어 있으면 value는 1 안 되어있으면 value는 빈 값이므로 "" -->
+	
 	<c:forEach var="book_no" items="${paramValues.orderbook_no }">
-		<input type="text" name="orderbook_no" value="${book_no }">
+		<input type="hidden" name="orderbook_no" value="${book_no }">
 	</c:forEach>
-	orderbook_cnt
+	
 	<c:if test="${not empty param.orderbook_cnt }">
-		<input type="text" name="orderbook_cnt" value="${param.orderbook_cnt }">
+		<input type="hidden" name="orderbook_cnt" value="${param.orderbook_cnt }">
 	</c:if>
-	cart_idx
+	
 	<c:if test="${empty param.orderbook_cnt }">cart_idx
 		<c:forEach var="cart_idx" items="${paramValues.cart_idxs }">
-			<input type="text" name="cart_idx" value="${cart_idx }">
+			<input type="hidden" name="cart_idx" value="${cart_idx }">
 		</c:forEach>
 		
 	</c:if>
 	
-	ordergoods_no<c:forEach var="ordergoods_no" items="${paramValues.ordergoods_no }">
-		<input type="text" name="ordergoods_no" value="${ordergoods_no }">
+	<c:forEach var="ordergoods_no" items="${paramValues.ordergoods_no }">
+		<input type="hidden" name="ordergoods_no" value="${ordergoods_no }">
 	</c:forEach>
-	<input type="text" name="store_code" value="${param.store_code }">
-	<input type="text" name="mypoint" value="${param.mypoint }">
+	<input type="hidden" name="store_code" value="${param.store_code }">
+	<input type="hidden" name="mypoint" value="${param.mypoint }">
 	
 	
 	<c:if test="${not empty param.order_nonmem_email }">
-		<input type="text" name="order_nonmem_email" value="${param.order_nonmem_email }">
+		<input type="hidden" name="order_nonmem_email" value="${param.order_nonmem_email }">
 	</c:if>
 	
 </form>

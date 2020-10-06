@@ -29,7 +29,7 @@
 <form method="post" action="orderStep0.do">
 	<input type="text" name="orderbook_no" value="1"><!-- value는 책의 기본키 -->
 	<input type="text" name="orderbook_cnt" value="2">
-	<input type="hidden" name="store_code" value="se01">
+	<input type="hidden" name="store_code" value="store1">
 	<input type="submit"  value="책선택 완료, 사은품 선택하러 ㄱ">
 </form><br>
 6. 비회원 바로구매 온라인
@@ -52,7 +52,7 @@
 <form method="post" action="orderStep0.do">
 	<input type="text" name="NonMemberBook_no" value="1"><!-- value는 책의 기본키 -->
 	<input type="text" name="NonMemberBook_no" value="2">
-	<input type="hidden" name="store_code" value="se01">
+	<input type="hidden" name="store_code" value="store1">
 	<input type="submit"  value="책선택 완료, 사은품 선택하러 ㄱ">
 </form><br>
 8. 비회원 장바구니 온라인

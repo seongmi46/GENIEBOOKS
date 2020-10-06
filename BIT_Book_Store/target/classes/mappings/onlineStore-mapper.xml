@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OnlineStore">
+
+	<!-- 월/일별 온라인/모든지점 책 판매 내역 -->
+	<select id="BookSales" parameterType="map" resultType="Integer">
+		SELECT NVL(SUM(B.BOOK_SALEPRICE * OB.ORDER_B_CNT), 0)
+		FROM ORDERS O, ORDER_BOOK OB, BOOK B
+		WHERE O.ORDER_NO = OB.ORDER_NO
+		AND B.BOOK_NO = OB.BOOK_NO
+		<if test="store_code != null">
+			AND OB.ORDER_OFFICE_NO = #{store_code}
+		</if>
+		AND O.ORDER_DATE BETWEEN TO_DATE(#{firstDay}, 'YYYY/MM/DD')
+							AND TO_DATE(#{lastDay}, 'YYYY/MM/DD')
+	</select>
+
+	<!-- 월/일별 온라인/모든지점 굿즈 판매 내역 -->
+	<select id="GoodsSales" parameterType="map" resultType="Integer">
+		SELECT NVL(SUM(G.GOODS_PRICE * OG.ORDER_G_CNT), 0)
+		FROM ORDERS O, ORDER_GOODS OG, GOODS G, ORDER_BOOK OB
+		WHERE O.ORDER_NO = OG.ORDER_NO
+		AND G.GOODS_CODE = OG.GOODS_CODE
+		AND O.ORDER_NO = OB.ORDER_NO
+		<if test="store_code != null">
+			AND OB.ORDER_OFFICE_NO = #{store_code}
+		</if>
+		AND O.ORDER_DATE BETWEEN TO_DATE(#{firstDay}, 'YYYY/MM/DD')
+							AND TO_DATE(#{lastDay}, 'YYYY/MM/DD')
+	</select>
+	
+	<!-- category_no 추출 -->
+	<select id="getCategory_no" resultType="Integer" parameterType="map">
+		SELECT NVL(CATEGORY_NO, 0)
+		FROM BOOK_CATEGORY
+		WHERE CATEGORY_CODE = #{category_code}
+		AND CATEGORY_MAIN = #{category_main}
+		AND CATEGORY_NAME = #{category_name}
+	</select>
+	
+	<!-- 동일한 책이 있는지 확인 -->
+	<select id="checkBook" resultType="Integer" parameterType="com.bit.bookstore.vo.BookVODateToString">
+		SELECT COUNT(*)
+		FROM BOOK
+		WHERE BOOK_NAME = #{book_name}
+		AND BOOK_WRITER = #{book_writer}
+		AND BOOK_PUBLISHER = #{book_publisher}
+		AND BOOK_TOTAL_PAGE = #{book_total_page}
+		AND BOOK_INFO = #{book_info}
+	</select>
+	
+	<!-- 책 입고 -->
+	<insert id="insertBook" parameterType="com.bit.bookstore.vo.BookVODateToString">
+		INSERT INTO BOOK(CATEGORY_NO, BOOK_NAME, BOOK_WRITER, BOOK_PUBLISHER,
+				BOOK_PRICE, BOOK_SALEPRICE, BOOK_INFO, BOOK_PUBLISHED_DATE,
+				BOOK_TOTAL_PAGE, BOOK_ENTERED_DATE, EBOOK, BOOK_ISBN, BOOK_IMG)
+		VALUES(#{category_no}, #{book_name}, #{book_writer}, #{book_publisher},
+			   #{book_price}, #{book_saleprice}, #{book_info}, TO_DATE(#{book_published_date}, 'YYYY-MM-DD'),
+			   #{book_total_page}, TO_DATE(#{book_entered_date}, 'YYYY-MM-DD'), #{ebook}, #{book_isbn}, #{book_img})
+	</insert>
+	
+	<!-- 동일한 굿즈 있는지 확인 -->
+	<select id="checkGoods" resultType="Integer" parameterType="String">
+		SELECT COUNT(*)
+		FROM GOODS
+		WHERE GOODS_NAME = #{goods_name}
+	</select>
+	
+	<!-- 굿즈 입고 -->
+	<insert id="insertGoods" parameterType="com.bit.bookstore.vo.GoodsVODateToString">
+		INSERT INTO GOODS(GOODS_NAME, GOODS_PRICE, GOODS_START_DATE, GOODS_END_DATE, GOODS_IMAGE)
+		VALUES(#{goods_name}, #{goods_price}, TO_DATE(#{goods_start_date}, 'YYYY-MM-DD', TO_DATE(#{goods_end_date}, 'YYYY-MM-DD'), #{goods_image})
+	</insert>
+	
+	
+	<select id="getOnlineTotalCount" parameterType="map" resultType="Integer">
+		SELECT COUNT(*)
+		FROM BOOK_STOCK BS, BOOK B
+		WHERE B.BOOK_NO = BS.BOOK_NO
+		AND STORE_CODE = #{store_code}
+		<if test='search != null and search != ""'>
+		AND B.BOOK_NAME LIKE '%' || #{search} || '%'
+		</if>
+	</select>
+	
+	<!-- 페이지에 표시할 책 재고 리스트 조회(online) -->
+	<select id="getBookStockList" parameterType="map" resultType="com.bit.bookstore.vo.BookStockVO">
+		SELECT *
+		FROM (SELECT ROWNUM R_NUM, A.*
+			FROM (SELECT B.BOOK_NO, B.CATEGORY_NO, B.BOOK_NAME, B.BOOK_WRITER, B.BOOK_PUBLISHER,
+                    B.BOOK_PRICE, B.BOOK_SALEPRICE, BOOK_IMG,
+                    BS.STOCK_IDX, BS.STORE_CODE, BS.CNT
+				FROM BOOK B, BOOK_STOCK BS
+				WHERE B.BOOK_NO = BS.BOOK_NO
+				AND BS.STORE_CODE = 'online'
+				<if test="search != null and !search.equals('')">
+				AND B.BOOK_NAME LIKE '%' || #{search} || '%'
+				</if>
+				ORDER BY BS.CNT) A)
+		WHERE R_NUM BETWEEN #{begin} and #{end}
+	</select>
+	
+	<!-- 재고 변경 -->
+	<update id="updateStockCnt" parameterType="map">
+		UPDATE BOOK_STOCK
+		SET CNT = #{cnt}
+		WHERE STOCK_IDX = #{stock_idx}
+	</update>
+	
+	<!-- 책 상세 정보 -->
+	<select id="getBookDetail" parameterType="Integer" resultType="com.bit.bookstore.vo.BookNCategoryVO">
+		SELECT B.BOOK_NO, B.CATEGORY_NO, B.BOOK_NAME, B.BOOK_WRITER, B.BOOK_PUBLISHER,
+			B.BOOK_PRICE, B.BOOK_SALEPRICE, B.BOOK_INFO, TO_CHAR(B.BOOK_PUBLISHED_DATE, 'YYYY"년 "MM"월 "DD"일"') AS BOOK_PUBLISHED_DATE,
+			B.BOOK_TOTAL_PAGE, TO_CHAR(B.BOOK_ENTERED_DATE, 'YYYY"년 "MM"월 "DD"일"') AS BOOK_ENTERED_DATE,
+			B.EBOOK, B.BOOK_ISBN, B.BOOK_IMG,
+			BC.CATEGORY_CODE, BC.cATEGORY_MAIN, BC.CATEGORY_NAME
+		FROM BOOK B, BOOK_CATEGORY BC
+		WHERE B.CATEGORY_NO = BC.CATEGORY_NO
+		AND B.BOOK_NO = #{book_no}
+	</select>
+	
+	<!-- 책 정보 수정 -->
+	<update id="updateBook" parameterType="com.bit.bookstore.vo.BookVODateToString">
+		UPDATE BOOK SET BOOK_NAME = #{book_name}
+            , CATEGORY_NO = #{category_no}
+            , BOOK_WRITER =#{book_writer}
+            , BOOK_PUBLISHER = #{book_publisher}
+            , BOOK_PRICE = #{book_price}
+            , BOOK_SALEPRICE = #{book_saleprice}
+            , BOOK_INFO = #{book_info}
+            , BOOK_PUBLISHED_DATE = #{book_published_date}
+            , BOOK_TOTAL_PAGE = #{book_total_page}
+            , BOOK_ENTERED_DATE = #{book_entered_date}
+            , EBOOK = #{ebook}
+            , BOOK_ISBN = #{book_isbn}
+            , BOOK_IMG = #{book_img}
+		WHERE BOOK_NO = #{book_no}
+	</update>
+	
+</mapper>

@@ -27,6 +27,7 @@
   <mappers>
     <!-- <mapper resource="mappings/board-mapper.xml"/> -->
     <mapper resource="mappings/order-mapper.xml"/>
+    <mapper resource="mappings/onlineStore-mapper.xml"/>
     <mapper resource="mappings/user-mapper.xml"/>
     <mapper resource="mappings/office-mapper.xml"/>
     <mapper resource="mappings/officeBook-mapper.xml"/>

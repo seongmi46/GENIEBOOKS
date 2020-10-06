@@ -86,6 +86,12 @@ public class OrderServiceImpl implements OrderService {
 		return orderDAOMybatis.getNonMemberOrderList(nonMemberCart);
 	}
 
+	@Override
+	public void insertOrderNonNumber(OrdersVO ordervo, List<CartVO> orderbook, int[] ordergoods_no, String store_code) {
+		// TODO Auto-generated method stub
+		orderDAOMybatis.insertOrderNonNumber(ordervo, orderbook, ordergoods_no, store_code);
+	}
+
 	
 
 }

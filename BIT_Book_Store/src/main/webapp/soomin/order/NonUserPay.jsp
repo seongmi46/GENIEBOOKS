@@ -168,6 +168,7 @@
 				alert("보유 포인트보다 많이 입력하셨습니다.\n다시 입력해주세요.");
 				$(this).val(extrapoint);
 				$("#totalPayment").html(totalPayment - parseInt($(this).val()));
+				$("input[name=totalPaymentReal]").val(totalPayment - parseInt($(this).val()));
 				$("#usedPoint").html(parseInt("${requestScope.bgp.usedpoint }") + parseInt($(this).val()));
 				$("input[name=mypoint]").val(parseInt("${requestScope.bgp.extrapoint }") - parseInt($(this).val()));
 			}else if($(this).val() < 0){
@@ -175,10 +176,12 @@
 			}else{//포인트 입력 제대로 했을 시
 				if(!isNaN(parseInt($(this).val()))){//입력된 값이 숫자일 때
 					$("#totalPayment").html(totalPayment - parseInt($(this).val()));
+					$("input[name=totalPaymentReal]").val(totalPayment - parseInt($(this).val()));
 					$("#usedPoint").html(parseInt("${requestScope.bgp.usedpoint }") + parseInt($(this).val()));
 					$("input[name=mypoint]").val(parseInt("${requestScope.bgp.extrapoint }") - parseInt($(this).val()));
 				}else{//입력된 값이 숫자가 아닐 때
 					$("#totalPayment").html(totalPayment);
+					$("input[name=totalPaymentReal]").val(totalPayment);
 					$("#usedPoint").html(parseInt("${requestScope.bgp.usedpoint }"));
 					$("input[name=mypoint]").val("${requestScope.bgp.extrapoint }");
 				}
@@ -230,6 +233,7 @@
 		
 		//초기 최종 결제 금액 세팅
 		$("input[name=totalPayment]").val(totalPayment);
+		$("input[name=totalPaymentReal]").val(totalPayment);
 		
 		
 		
@@ -366,7 +370,21 @@
 		var payType = (document.getElementsByName("payType"))[0].value;
 		var cid = "";
 		var zip_code_enter = false;
-		if(document.getElementById("order_recv_zip_code")){//온라인구매로 주소 입력창이 있을 땐
+		
+		
+		if(document.getElementsByName("order_recv_name")[0].value == ""){
+			alert("이름을 입력해주세요.");
+			document.getElementsByName("order_recv_name")[0].focus();
+			return false;
+		}
+		
+		if(document.getElementsByName("inputphone2")[0].value == "" || document.getElementsByName("inputphone3")[0].value == ""){
+			alert("전화번호를 입력해주세요.");
+			return false;
+		}
+		
+		
+		if(document.getElementById("inputzip")){//온라인구매로 주소 입력창이 있을 땐
 			for(var i = 0; i < document.getElementsByName("order_recv_zip_code").length; i++){
 				if(document.getElementsByName("order_recv_zip_code")[i].value != ""){
 					zip_code_enter = true;
@@ -831,10 +849,10 @@
 						</div>
 						
 						
-						<input type="hidden" name="totalPayment" value="">
+						<input type="hidden" name="totalPaymentReal" value="">
 						<input type="hidden" name="store_code" value="${requestScope.store_code }">
 						<input type="hidden" name="point" value="${requestScope.point }">
-						<input type="hidden" name="totalPayment" value=${requestScope.point }>
+						<input type="hidden" name="totalPayment" value="">
 						<input type="hidden" name="mypoint" value="${requestScope.bgp.extrapoint }">
 						
 						<!-- 선택한 책 객체 저장 --><!-- 책 수량은 내 카트에서 책 넘버와 같은 것의 수량을 저장 -->

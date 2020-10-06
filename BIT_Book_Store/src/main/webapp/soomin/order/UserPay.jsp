@@ -124,7 +124,6 @@
 		$(".delivery_checkbox").click(function(){
 			if($(".delivery_checkbox").prop("checked")){
 				$("#inputname").val("${sessionScope.user.user_name}");
-				
 				$("select[name=inputphone1]").val("${requestScope.phoneNumberList.get(0)}").prop("selected", true);
 				$("input[name=inputphone2]").val("${requestScope.phoneNumberList.get(1)}");
 				$("input[name=inputphone3]").val("${requestScope.phoneNumberList.get(2)}");
@@ -173,6 +172,7 @@
 				alert("보유 포인트보다 많이 입력하셨습니다.\n다시 입력해주세요.");
 				$(this).val(extrapoint);
 				$("#totalPayment").html(totalPayment - parseInt($(this).val()));
+				$("input[name=totalPaymentReal]").val(totalPayment - parseInt($(this).val()));
 				$("#usedPoint").html(parseInt("${requestScope.bgp.usedpoint }") + parseInt($(this).val()));
 				$("input[name=mypoint]").val(parseInt("${requestScope.bgp.extrapoint }") - parseInt($(this).val()));
 			}else if($(this).val() < 0){
@@ -180,10 +180,12 @@
 			}else{//포인트 입력 제대로 했을 시
 				if(!isNaN(parseInt($(this).val()))){//입력된 값이 숫자일 때
 					$("#totalPayment").html(totalPayment - parseInt($(this).val()));
+					$("input[name=totalPaymentReal]").val(totalPayment - parseInt($(this).val()));
 					$("#usedPoint").html(parseInt("${requestScope.bgp.usedpoint }") + parseInt($(this).val()));
 					$("input[name=mypoint]").val(parseInt("${requestScope.bgp.extrapoint }") - parseInt($(this).val()));
 				}else{//입력된 값이 숫자가 아닐 때
 					$("#totalPayment").html(totalPayment);
+					$("input[name=totalPaymentReal]").val(totalPayment);
 					$("#usedPoint").html(parseInt("${requestScope.bgp.usedpoint }"));
 					$("input[name=mypoint]").val("${requestScope.bgp.extrapoint }");
 				}
@@ -235,6 +237,8 @@
 		
 		//초기 최종 결제 금액 세팅
 		$("input[name=totalPayment]").val(totalPayment);
+		$("input[name=totalPaymentReal]").val(totalPayment);
+		
 		
 		
 		
@@ -324,7 +328,21 @@
 		var payType = (document.getElementsByName("payType"))[0].value;
 		var cid = "";
 		var zip_code_enter = false;
-		if(document.getElementById("order_recv_zip_code")){//온라인구매로 주소 입력창이 있을 땐
+		
+		
+		if(document.getElementsByName("order_recv_name")[0].value == ""){
+			alert("이름을 입력해주세요.");
+			document.getElementsByName("order_recv_name")[0].focus();
+			return false;
+		}
+		
+		
+		if(document.getElementsByName("inputphone2")[0].value == "" || document.getElementsByName("inputphone3")[0].value == ""){
+			alert("전화번호를 입력해주세요.");
+			return false;
+		}
+		
+		if(document.getElementById("inputzip")){//온라인구매로 주소 입력창이 있을 땐
 			for(var i = 0; i < document.getElementsByName("order_recv_zip_code").length; i++){
 				if(document.getElementsByName("order_recv_zip_code")[i].value != ""){
 					zip_code_enter = true;
@@ -336,10 +354,11 @@
 				return false;
 			}
 		}else{//바로드림으로 문자인증 할 땐
-			if(document.getElementById("confirmSMS").value == "false"){
+			/* if(document.getElementById("confirmSMS").value == "false"){
 				alert("문자 인증을 완료하세요.");
 				return false;
-			}
+			} */
+			//!!!!!!!!!!!!!!!!!!!!!!!주석 풀어야함
 		}
 		
 		if(payType == ""){
@@ -643,7 +662,7 @@
 										<tr>
 											<td>
 												<input type="hidden" name="cart_idxs" value="${cartbookvo.cart_idx }">
-												<img class="book-img" alt="책 이미지${cartbookvo.book_no }" src="${pageContext.request.contextPath}/resources/images/book_img/${cartbookvo.book_img }">
+												<img class="book-img" alt="책 이미지${cartbookvo.book_no }" src="${cartbookvo.book_img }">
 												${cartbookvo.book_name }
 											</td>
 											<td class="center middle">
@@ -670,7 +689,7 @@
 										<c:forEach var="bookvo" items="${requestScope.orderBookList }" varStatus="status">
 										<tr>
 											<td>
-												<img class="book-img" alt="책 이미지${bookvo.book_no }" src="${pageContext.request.contextPath}/resources/images/book_img/${bookvo.book_img }">
+												<img class="book-img" alt="책 이미지${bookvo.book_no }" src="${bookvo.book_img }">
 												${bookvo.book_name }
 											</td>
 											<td class="center middle">
@@ -845,7 +864,7 @@
 						</div>
 						
 						
-						<input type="hidden" name="totalPayment" value="">
+						<input type="hidden" name="totalPaymentReal" value="${requestScope.point }">
 						<input type="hidden" name="store_code" value="${requestScope.store_code }">
 						<input type="hidden" name="point" value="${requestScope.point }">
 						<input type="hidden" name="totalPayment" value=${requestScope.point }>

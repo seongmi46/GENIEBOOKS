@@ -20,4 +20,5 @@ public interface OrderService {
 	StoreVO getStoreInfo(String store_code);
 	void insertOrderDirect(OrdersVO ordervo, int[] orderbook_no, int orderbook_cnt, int[] ordergoods_no, String store_code);
 	List<CartBookVO> getNonMemberOrderList(List<CartVO> nonMemberCart);
+	void insertOrderNonNumber(OrdersVO ordervo, List<CartVO> orderbook, int[] ordergoods_no, String store_code);
 }

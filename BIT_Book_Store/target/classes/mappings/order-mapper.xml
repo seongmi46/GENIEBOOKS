@@ -153,7 +153,23 @@
 	</select>
 	
 	
+	<update id="updateBookStock1" parameterType="map">
+		UPDATE BOOK_STOCK 
+		SET CNT = CNT - #{orderbook_cnt}
+		WHERE
+		<foreach collection="orderbook_no" item="book_no" separator=" OR ">
+		 (BOOK_NO = #{book_no} AND STORE_CODE = #{order_office_no})
+		</foreach>
+	</update>
 	
+	
+	<update id="updateBookStock2" parameterType="map">
+		<foreach collection="cartList" item="list" separator=" ; " open="BEGIN" close=";END;">
+			UPDATE BOOK_STOCK
+			SET CNT = CNT - #{list.cnt}
+			WHERE BOOK_NO = #{list.book_no} AND STORE_CODE = #{order_office_no}
+		</foreach>
+	</update>
 	
 	
 </mapper>
