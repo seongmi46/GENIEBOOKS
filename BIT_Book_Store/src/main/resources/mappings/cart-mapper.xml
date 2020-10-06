@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cartmapper">
+
+<insert id="insertCart" parameterType="Map">
+	INSERT INTO CART (USER_ID, BOOK_NO, CNT, STORE_CODE)
+	VALUES (#{user_id}, #{book_no}, #{cnt}, #{store_code})
+			
+</insert>
+<update id="updateCart" parameterType="cart">
+	UPDATE CART SET USER_ID=#{user_id},  BOOK_NO=#{book_no}, CNT=#{cnt}, 
+	STORE_CODE=#{store_code} 
+	WHERE CART_IDX=#{cart_idx}
+</update>
+
+<delete id="deleteCart" parameterType="cart">
+	DELETE FROM CART WHERE CART_IDX=#{cart_idx}
+</delete>
+
+<select id="selectCart" parameterType="cart" resultType="cart">
+	SELECT * FROM CART WHERE CART_IDX=#{cart_idx}
+</select>
+
+<select id="selectCartList" resultType="cart">
+	SELECT * FROM CART WHERE 1=1 
+</select>
+<select id="checkSame" resultType="integer" parameterType="Map">
+	SELECT COUNT(*) FROM CART 
+	WHERE BOOK_NO = #{book_no}
+	AND USER_ID= #{user_id}
+	AND STORE_CODE= #{store_code}
+</select>
+
+</mapper>
+
